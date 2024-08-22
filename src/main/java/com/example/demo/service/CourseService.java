@@ -1,0 +1,125 @@
+package com.example.demo.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.entity.Course;
+import com.example.demo.entity.Lecture;
+import com.example.demo.exception.AppException;
+import com.example.demo.exception.ErrorCode;
+import com.example.demo.repository.CourseRepository;
+import com.example.demo.repository.LectureRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class CourseService {
+    @Autowired
+    private CourseRepository courseRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private LectureRepository lectureRepository;
+
+    public Course getCourseById(Integer id) {
+        return courseRepository.findById(id)
+            .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
+    }
+
+    public List<Course> getAllCourse() {
+        return courseRepository.findAll();
+    }
+
+    public Course createCourse(Course course){
+        course.setTeacherId(userService.getMyinfo().getId());
+        course.setState("PENDING");
+        return courseRepository.save(course);
+    }
+
+    public Course updateCourse(Integer id, Course course){
+        // Kiểm tra xem người dùng hiện tại có quyền chỉnh sửa khóa học này hay không
+        if (userService.getMyinfo().getId() != getCourseById(id).getTeacherId() && hasScopeAdmin() == false){
+            throw new AppException(ErrorCode.PERMISSION_COURSE_DENIED);
+        }
+
+        Course course2 = getCourseById(id);
+
+        course2.setDescription(course.getDescription());
+        course2.setPrice(course.getPrice());
+        course2.setTitle(course.getTitle());
+
+        return courseRepository.save(course2);
+    }
+
+    public void deleteCourse(Integer id){
+        // Kiểm tra xem người dùng hiện tại có quyền chỉnh sửa khóa học này hay không
+        if (userService.getMyinfo().getId() != getCourseById(id).getTeacherId() && hasScopeAdmin() == false){
+            throw new AppException(ErrorCode.PERMISSION_COURSE_DENIED);
+        }
+        courseRepository.deleteById(id);
+    }
+
+
+    public boolean hasScopeAdmin() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    for (GrantedAuthority authority : authentication.getAuthorities()) {
+        if (authority.getAuthority().equals("SCOPE_ADMIN")) {
+            return true;
+        }
+    
+    }return false;};
+
+    
+    public List<Course> getallCoursesById(){
+        return courseRepository.findAllByTeacherId(userService.getMyinfo().getId());
+    }
+
+    public Lecture getLectureById(Integer id) {
+        return lectureRepository.findById(id)
+            .orElseThrow(() -> new AppException(ErrorCode.LECTURE_NOT_EXISTED));
+    }
+
+    public Lecture addLecture(Integer courseId, Lecture lecture){
+        if (userService.getMyinfo().getId() != getCourseById(courseId).getTeacherId() && hasScopeAdmin() == false){
+            throw new AppException(ErrorCode.PERMISSION_COURSE_DENIED);
+        }
+        lecture.setCourseId(courseId);
+        lecture.setState("PENDING");
+        return lectureRepository.save(lecture);
+    }
+
+    public Lecture updateLecture(Integer lectureId ,Lecture lecture){
+        if(!lectureRepository.existsById(lectureId)){
+            throw new AppException(ErrorCode.LECTURE_NOT_EXISTED);
+        }
+        if (userService.getMyinfo().getId() != getCourseById(getLectureById(lectureId).getCourseId()).getTeacherId() && hasScopeAdmin() == false){
+            throw new AppException(ErrorCode.PERMISSION_COURSE_DENIED);
+        }
+
+        Lecture lectureUpdate = lectureRepository.findById(lectureId).get();
+        lectureUpdate.setContent(lecture.getContent());
+        lectureUpdate.setTitle(lecture.getTitle());
+
+        return lectureRepository.save(lectureUpdate);
+    } 
+
+    public void deleteLecture(Integer id){
+        // Kiểm tra xem người dùng hiện tại có quyền chỉnh sửa khóa học này hay không
+        if (userService.getMyinfo().getId() != getCourseById(id).getTeacherId() && hasScopeAdmin() == false){
+            throw new AppException(ErrorCode.LECTURE_NOT_EXISTED);
+        }
+        lectureRepository.deleteById(id);
+    }
+
+
+    public Integer getMyNewestCourseId(){
+        return courseRepository.findLatestCourseIdByTeacherId(userService.getMyinfo().getId()).get().get(0);
+    }
+}
