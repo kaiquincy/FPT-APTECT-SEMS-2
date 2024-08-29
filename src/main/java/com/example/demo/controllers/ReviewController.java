@@ -3,7 +3,6 @@ package com.example.demo.controllers;
 import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.ReviewDTO;
 import com.example.demo.dto.request.ReviewFormRequest;
-import com.example.demo.entity.Course;
 import com.example.demo.service.IReviewService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

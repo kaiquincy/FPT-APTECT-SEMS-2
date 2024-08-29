@@ -57,7 +57,7 @@ public class SecurityConfig {
                 // Cho phép POST yêu cầu tới các PUBLIC_ENDPOINTS mà không cần xác thực
                 request.requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS).permitAll()
                     .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
-                    .requestMatchers(USER_ENDPOINTS).hasAnyAuthority("SCOPE_USER", "SCOPE_TEACHER", "SCOPE_ADMIN")
+                    .requestMatchers(USER_ENDPOINTS).hasAnyAuthority("SCOPE_STUDENT", "SCOPE_TEACHER", "SCOPE_ADMIN")
                     .requestMatchers("/api/course/**", "/api/lecture/**","/api/s3bucketstorage/**").hasAnyAuthority("SCOPE_TEACHER", "SCOPE_ADMIN")
                     .requestMatchers("/api/admin/**", "/api/user/**").hasAuthority("SCOPE_ADMIN")
                     .requestMatchers("/api/courses/{course-id}/").hasAuthority("SCOPE_STUDENT")
