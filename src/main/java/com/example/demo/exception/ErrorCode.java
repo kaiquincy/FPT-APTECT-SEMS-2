@@ -32,7 +32,14 @@ public enum ErrorCode {
     INSUFFICIENT_FUNDS(1301, "Insufficient funds to complete the purchase", HttpStatus.BAD_REQUEST),
 
     UNAUTHENTICATED(2001, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    ACCESS_DENIED(2002, "Access denied", HttpStatus.FORBIDDEN);
+    ACCESS_DENIED(2002, "Access denied", HttpStatus.FORBIDDEN),
+
+    RATE_OF_COMMENT(2100, "Rating must be between 1 and 5.", HttpStatus.BAD_REQUEST),
+
+    NOTIFICATION_NOT_FOUND(2200, "Notification not found", HttpStatus.BAD_REQUEST),
+    MARK_AS_READ_FAIL(2201, "mark as read fail", HttpStatus.BAD_REQUEST)
+
+    ;
 
 
     private int code;
