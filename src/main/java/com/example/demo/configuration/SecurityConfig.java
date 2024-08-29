@@ -60,6 +60,8 @@ public class SecurityConfig {
                     .requestMatchers(USER_ENDPOINTS).hasAnyAuthority("SCOPE_USER", "SCOPE_TEACHER", "SCOPE_ADMIN")
                     .requestMatchers("/api/course/**", "/api/lecture/**","/api/s3bucketstorage/**").hasAnyAuthority("SCOPE_TEACHER", "SCOPE_ADMIN")
                     .requestMatchers("/api/admin/**", "/api/user/**").hasAuthority("SCOPE_ADMIN")
+                    .requestMatchers("/api/courses/{course-id}/").hasAuthority("SCOPE_STUDENT")
+                    .requestMatchers(HttpMethod.POST,"/api/notifications").hasAuthority("SCOPE_ADMIN")
                     // Mọi yêu cầu khác phải được xác thực
                     .anyRequest().authenticated())
                     
