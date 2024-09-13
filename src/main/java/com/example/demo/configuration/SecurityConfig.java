@@ -39,7 +39,6 @@ public class SecurityConfig {
     private final String[] USER_ENDPOINTS = {
 
         "/api/user/**",
-        "/api/enrollment/**",
         "/api/transaction/**",
         "/api/upload-video"
     };

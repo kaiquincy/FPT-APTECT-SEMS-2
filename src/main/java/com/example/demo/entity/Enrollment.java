@@ -1,64 +1,39 @@
 package com.example.demo.entity;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "enrollments")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Enrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(name = "student_id", nullable = false)
-    private Integer studentId;
+    Integer studentId;
 
     @Column(name = "course_id", nullable = false)
-    private Integer courseId;
+    Integer courseId;
 
-    private Integer progress;
+    Integer progress;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "enrollment_date")
+    LocalDateTime enrollmentDate;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
-
-
-
-
-    public Integer getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
-    }
-
-    public Integer getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
-    }
-
-    public Integer getProgress() {
-        return progress;
-    }
-
-    public void setProgress(Integer progress) {
-        this.progress = progress;
-    }
 }
