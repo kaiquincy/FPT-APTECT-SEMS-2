@@ -2,19 +2,13 @@ package com.example.demo.controllers;
 
 import java.util.List;
 
+import com.example.demo.dto.EnrollmentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import com.example.demo.dto.ApiResponse;
-import com.example.demo.entity.Enrollment;
 import com.example.demo.service.EnrollmentService;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
@@ -26,13 +20,26 @@ public class EnrollmentController {
     EnrollmentService enrollmentService;
 
     @PostMapping("{courseId}")
-    ApiResponse<Enrollment> postMethodName(@PathVariable Integer courseId) {
-        return ApiResponse.<Enrollment>builder().result(enrollmentService.addEnrollment(courseId)).build();
+    ApiResponse<EnrollmentDTO> post(@PathVariable Integer courseId) {
+        ApiResponse<EnrollmentDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(enrollmentService.addEnrollment(courseId));
+        return apiResponse;
+
+    }
+
+    @PostMapping("{courseId}/update_progress")
+    ApiResponse<EnrollmentDTO> updateProgress(@PathVariable Integer courseId) {
+        ApiResponse<EnrollmentDTO> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(enrollmentService.updateEnrollment(courseId));
+        return apiResponse;
     }
 
     @GetMapping
-    ApiResponse<List<Enrollment>> getMyEnrollments() {
-        return ApiResponse.<List<Enrollment>>builder().result(enrollmentService.getMyEnrollments()).build();
+    ApiResponse<List<EnrollmentDTO>> getMyEnrollments() {
+
+        ApiResponse<List<EnrollmentDTO>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(enrollmentService.getMyEnrollments());
+        return apiResponse;
     }
     
 }
