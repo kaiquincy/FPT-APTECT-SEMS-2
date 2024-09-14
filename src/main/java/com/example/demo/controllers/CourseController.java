@@ -53,8 +53,8 @@ public class CourseController {
     }
     
     @PutMapping("/{id}")
-    ApiResponse<Course> updateCourse(@PathVariable Integer id, @Valid @RequestBody Course entity) {
-		ApiResponse<Course> apiResponse = new ApiResponse<>();
+    ApiResponse<String> updateCourse(@PathVariable Integer id, @Valid @RequestBody Course entity) {
+		ApiResponse<String> apiResponse = new ApiResponse<>();
 		apiResponse.setResult(courseService.updateCourse(id, entity));
 		return apiResponse;
     }

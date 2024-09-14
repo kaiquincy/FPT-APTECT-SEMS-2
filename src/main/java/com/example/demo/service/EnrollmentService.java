@@ -34,9 +34,9 @@ public class EnrollmentService {
             throw new AppException(ErrorCode.ENROLLMENT_EXISTED);
         }
 
-        if(userService.getMyinfo().getBalance() < courseRepository.findById(courseId).get().getPrice()){
-            throw new AppException(ErrorCode.INSUFFICIENT_FUNDS);
-        }
+        // if(userService.getMyinfo().getBalance() < courseRepository.findById(courseId).get().getPrice()){
+        //     throw new AppException(ErrorCode.INSUFFICIENT_FUNDS);
+        // }
 
         Transaction transaction = new Transaction();
         transaction.setAmount(courseRepository.findById(courseId).get().getPrice());

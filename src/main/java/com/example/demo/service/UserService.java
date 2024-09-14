@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +25,8 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public List<Users> getAllUsers() {

@@ -42,7 +42,7 @@ public class CourseService {
         return courseRepository.save(course);
     }
 
-    public Course updateCourse(Integer id, Course course){
+    public String updateCourse(Integer id, Course course){
         // Kiểm tra xem người dùng hiện tại có quyền chỉnh sửa khóa học này hay không
         if (userService.getMyinfo().getId() != getCourseById(id).getTeacherId() && hasScopeAdmin() == false){
             throw new AppException(ErrorCode.PERMISSION_COURSE_DENIED);
@@ -54,7 +54,9 @@ public class CourseService {
         course2.setPrice(course.getPrice());
         course2.setTitle(course.getTitle());
 
-        return courseRepository.save(course2);
+        courseRepository.save(course2);
+
+        return("Update course information successfully!");
     }
 
     public void deleteCourse(Integer id){
@@ -112,7 +114,7 @@ public class CourseService {
 
     public void deleteLecture(Integer id){
         // Kiểm tra xem người dùng hiện tại có quyền chỉnh sửa khóa học này hay không
-        if (userService.getMyinfo().getId() != getCourseById(id).getTeacherId() && hasScopeAdmin() == false){
+        if (userService.getMyinfo().getId() != getCourseById(getLectureById(id).getCourseId()).getTeacherId() && hasScopeAdmin() == false){
             throw new AppException(ErrorCode.LECTURE_NOT_EXISTED);
         }
         lectureRepository.deleteById(id);

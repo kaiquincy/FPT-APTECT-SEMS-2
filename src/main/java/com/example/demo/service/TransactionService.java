@@ -57,12 +57,14 @@ public class TransactionService {
     }
 
     private void purchaseTransaction(Transaction transaction){
-        Users user = userService.getMyinfo();
-        if(user.getBalance() < transaction.getAmount()){
-            throw new AppException(ErrorCode.INSUFFICIENT_FUNDS);
-        }
-        user.setBalance(user.getBalance() - transaction.getAmount());
-        userRepository.save(user);
+        // Users user = userService.getMyinfo();
+        // if(user.getBalance() < transaction.getAmount()){
+        //     throw new AppException(ErrorCode.INSUFFICIENT_FUNDS);
+        // }
+        // user.setBalance(user.getBalance() - transaction.getAmount());
+        // userRepository.save(user);
+
+        //Xử lí API ngân hàng tại đây
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")

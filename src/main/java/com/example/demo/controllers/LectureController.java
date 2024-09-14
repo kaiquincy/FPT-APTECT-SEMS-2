@@ -35,7 +35,7 @@ public class LectureController {
     }
 
     @DeleteMapping("{lectureId}")
-    ApiResponse<String> deleteLecture(@PathVariable Integer lectureId , @RequestBody Lecture lecture) {
+    ApiResponse<String> deleteLecture(@PathVariable Integer lectureId) {
       courseService.deleteLecture(lectureId);  
       return ApiResponse.<String>builder().result("Delete lecture completed!").build();
     }
