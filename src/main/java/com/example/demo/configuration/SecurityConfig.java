@@ -35,7 +35,8 @@ public class SecurityConfig {
     private final String[] PUBLIC_GET_ENDPOINTS = {
         "/api/course/**",
         "/video",
-        "/swagger-ui/**"
+        "/swagger-ui/**",
+        "/v3/api-docs/**"
     };
     private final String[] USER_ENDPOINTS = {
 

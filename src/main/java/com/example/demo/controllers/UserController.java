@@ -12,6 +12,7 @@ import com.example.demo.dto.UserCreationRequest;
 import com.example.demo.entity.Users;
 import com.example.demo.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +34,10 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-    @GetMapping("/{id}")
+	@Operation(summary = "Get user by id ok!",
+            description = "Get all, get metaData in response, page start from 0, default page =0, size = 10"
+    )
+    @GetMapping("/{id}") 
     ApiResponse<Users> getUserById(@PathVariable Long id) {
 		ApiResponse<Users> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.getUserById(id));
