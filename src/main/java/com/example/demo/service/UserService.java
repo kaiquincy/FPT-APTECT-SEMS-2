@@ -8,7 +8,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.UserCreationRequest;
 import com.example.demo.entity.Users;
 import com.example.demo.enums.Role;
@@ -16,8 +18,9 @@ import com.example.demo.exception.AppException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.repository.UserRepository;
 
-import java.util.List;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
+import java.util.List;
 
 @Service
 public class UserService {
@@ -28,27 +31,43 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    public boolean emailExists(String email) {
+        return userRepository.findByEmail(email) != null; 
+    }
+    
+
+    public void updatePassword(String email, String newPassword) {
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        user.setPassword_hash(encodedPassword);
+
+        userRepository.save(user);
+    }
+
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public List<Users> getAllUsers() {
         return userRepository.findAll();
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN') or @userRepository.findById(#id)?.get()?.username == authentication.name") 
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN') or @userRepository.findById(#id)?.get()?.username == authentication.name")
     public Users getUserById(Long id) {
         return userRepository.findById(id)
-            .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 
-    public Users getMyinfo(){
+    public Users getMyinfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
 
         return userRepository.findByUsername(name).orElseThrow(
-            () -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
     }
 
-    public Users saveUser(UserCreationRequest userDTO ) {
+    public Users saveUser(UserCreationRequest userDTO) {
         // Chuyển đổi từ UserDTO sang Users
         Users user = new Users();
         user.setUsername(userDTO.getUsername());
@@ -58,24 +77,23 @@ public class UserService {
         user.setBalance(0.0);
         user.setFullName(userDTO.getFullName());
 
-        //Validation
-        if (userRepository.existsByUsername(user.getUsername())){
+        // Validation
+        if (userRepository.existsByUsername(user.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-        if (userRepository.existsByEmail(user.getEmail())){
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
 
-		//Hash the password
-		user.setPassword_hash(passwordEncoder.encode(user.getPassword_hash()));
-        
+        // Hash the password
+        user.setPassword_hash(passwordEncoder.encode(user.getPassword_hash()));
+
         return userRepository.save(user);
     }
 
-
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or @userRepository.findById(#id)?.get()?.username == authentication.name")
-    public Users updateUser(Long id, Users userUpdateRequest){
-        Users user = getUserById(id); //old user
+    public Users updateUser(Long id, Users userUpdateRequest) {
+        Users user = getUserById(id); // old user
 
         user.setEmail(userUpdateRequest.getEmail());
         user.setFullName(userUpdateRequest.getFullName());
@@ -86,7 +104,7 @@ public class UserService {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or @userRepository.findById(#id)?.get()?.username == authentication.name")
-    public void deleteUser(Long id){
+    public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
@@ -94,7 +112,7 @@ public class UserService {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or @userRepository.findById(#id)?.get()?.username == authentication.name")
-    public String assignRole(Long id, String role){
+    public String assignRole(Long id, String role) {
         List<String> roles = List.of("TEACHER", "STUDENT");
         if (!roles.contains(role)) {
             throw new AppException(ErrorCode.ROLE_NOT_EXISTED);
@@ -107,4 +125,3 @@ public class UserService {
         return "Change role to " + role + " completed!";
     }
 }
-
