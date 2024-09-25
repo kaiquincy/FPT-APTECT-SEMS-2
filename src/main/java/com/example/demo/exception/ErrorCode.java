@@ -14,6 +14,7 @@ public enum ErrorCode {
     LECTURE_NOT_EXISTED(1005,"Lecture not existed", HttpStatus.NOT_FOUND),
     ENROLLMENT_EMPTY(1006, "This user have no enrollment", HttpStatus.NOT_FOUND),
     ENROLLMENT_EXISTED(1007, "User already enrolled in this course", HttpStatus.BAD_REQUEST),
+    CART_NOT_EXISTED(1008, "Cart not existed", HttpStatus.NOT_FOUND),
     
 
     USERNAME_INVALID(1102, "Username must be between 5 and 15 characters", HttpStatus.BAD_REQUEST),
