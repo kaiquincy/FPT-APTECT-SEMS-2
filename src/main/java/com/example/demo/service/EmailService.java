@@ -17,4 +17,8 @@ public class EmailService {
         message.setText(body);
         mailSender.send(message);
     }
+    public void confirmRegisterCourse(String msg, String mail) {
+        String subject = "Course Registration Confirmation"; //
+        sendEmail(mail, subject, msg); // gui tn
+    }
 }
