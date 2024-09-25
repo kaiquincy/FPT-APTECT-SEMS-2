@@ -86,14 +86,12 @@ public class UserController {
 		if (!userService.emailExists(email)) {
 			throw new RuntimeException("Email does not exist!");
 		}
-
-		String verificationCode = forgotPasswordService.generateVerificationCode();
-
-		forgotPasswordService.sendVerificationCode(email, verificationCode);
+		
+		forgotPasswordService.sendVerificationCode(email);
 
 		return ApiResponse.<String>builder().result("Verification code has been sent to your email").build();
 	}
-	@PostMapping("/reset")
+	@PostMapping("/reset-password")
     public ApiResponse<String> resetPassword(@RequestBody Map<String, String> requestBody) {
         String email = requestBody.get("email");
         String verificationCode = requestBody.get("code");

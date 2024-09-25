@@ -21,13 +21,10 @@ public class ForgotPasswordService {
     @Autowired
     private EmailService emailService;
 
-    public String createPasswordResetToken(String email) {
+    public String savePasswordResetToken(String email, String token) {
         if (!userService.emailExists(email)) {
             throw new IllegalArgumentException("Email does not exist!");
         }
-
-        String token = UUID.randomUUID().toString();
-
         PasswordResetToken resetToken = new PasswordResetToken();
         resetToken.setToken(token);
         resetToken.setEmail(email);
@@ -41,7 +38,10 @@ public class ForgotPasswordService {
         return String.valueOf((int)(Math.random() * 90000) + 10000);
     }
 
-    public void sendVerificationCode(String email, String code) {
+    public void sendVerificationCode(String email) {
+        
+        String code = generateVerificationCode();
+        savePasswordResetToken(email, code);
         emailService.sendEmail(email, "Your Verification Code", "Your verification code is: " + code);
     }
 
