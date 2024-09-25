@@ -38,6 +38,9 @@ public class Course {
     @Column(nullable = true)
     private String state;
 
+    @Column(nullable = true)
+    private String img;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -46,17 +49,18 @@ public class Course {
         createdAt = LocalDateTime.now();
     }
 
-    public double getRate() {
-        return rate;
+
+
+    public Integer getId() {
+        return this.id;
     }
 
-    public void setRate(double rate) {
-        this.rate = rate;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    // Getters and Setters
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -64,7 +68,7 @@ public class Course {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
@@ -72,34 +76,51 @@ public class Course {
     }
 
     public Double getPrice() {
-        return price;
+        return this.price;
     }
 
     public void setPrice(Double price) {
         this.price = price;
     }
 
+    public Integer getTeacherId() {
+        return this.teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public double getRate() {
+        return this.rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
     public String getState() {
-        return state;
+        return this.state;
     }
 
     public void setState(String state) {
         this.state = state;
     }
 
-    public int getId() {
-        return id;
+    public String getImg() {
+        return this.img;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setImg(String img) {
+        this.img = img;
     }
 
-    public Integer getTeacherId() {
-        return teacherId;
+    public LocalDateTime getCreatedAt() {
+        return this.createdAt;
     }
 
-    public void setTeacherId(Integer teacherId) {
-        this.teacherId = teacherId;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
+
 }

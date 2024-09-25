@@ -34,13 +34,14 @@
             "/api/auth/token",
             "/api/auth/introspect",
             "/api/user/forgot-password",
-            "/api/user/reset-password"
+            "/api/user/reset-password",        
         };
 
         private final String[] PUBLIC_GET_ENDPOINTS = {
             "/api/course/**",
             "/video",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+            "/uploads/**"
         };
 
         // Các endpoint yêu cầu xác thực người dùng
