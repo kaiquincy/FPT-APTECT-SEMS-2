@@ -3,79 +3,96 @@ package com.example.demo.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dto.ApiResponse;
 import com.example.demo.entity.Course;
 import com.example.demo.service.CourseService;
+import com.example.demo.service.EmailService;
 
 import jakarta.validation.Valid;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-
-
 
 @RestController
 @RequestMapping(value = "/api/course")
-@CrossOrigin(origins = "http://localhost:3000") //Cho phep front end su dung API
+@CrossOrigin(origins = "http://localhost:3000") // Позволяет фронтенду использовать API
 @Slf4j
 public class CourseController {
+
     @Autowired
     CourseService courseService;
 
+    @Autowired
+    EmailService emailService; // Внедряем EmailService
+
     @GetMapping
     ApiResponse<List<Course>> getAllCourse() {
-		ApiResponse<List<Course>> apiResponse = new ApiResponse<>();
+        ApiResponse<List<Course>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(courseService.getAllCourse());
-		return apiResponse;
+        return apiResponse;
     }
 
     @GetMapping("/{id}")
     ApiResponse<Course> getCourseById(@PathVariable Integer id) {
-		ApiResponse<Course> apiResponse = new ApiResponse<>();
+        ApiResponse<Course> apiResponse = new ApiResponse<>();
         apiResponse.setResult(courseService.getCourseById(id));
-		return apiResponse;
+        return apiResponse;
     }
 
     @PostMapping
     ApiResponse<Course> createCourse(@Valid @RequestBody Course entity) {
-		ApiResponse<Course> apiResponse = new ApiResponse<>();
-		apiResponse.setResult(courseService.createCourse(entity));
-		return apiResponse;
+        ApiResponse<Course> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(courseService.createCourse(entity));
+        return apiResponse;
     }
-    
+
     @PutMapping("/{id}")
     ApiResponse<String> updateCourse(@PathVariable Integer id, @Valid @RequestBody Course entity) {
-		ApiResponse<String> apiResponse = new ApiResponse<>();
-		apiResponse.setResult(courseService.updateCourse(id, entity));
-		return apiResponse;
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(courseService.updateCourse(id, entity));
+        return apiResponse;
     }
 
     @DeleteMapping("/{id}")
     ApiResponse<String> deleteCourseById(@PathVariable Integer id) {
-      courseService.deleteCourse(id);
-      return ApiResponse.<String>builder().result("Course has been deleted").build();
+        courseService.deleteCourse(id);
+        return ApiResponse.<String>builder().result("Course has been deleted").build();
     }
 
     @GetMapping("/mynewestcourseid")
     ApiResponse<Integer> getMyNewestCourseId() {
-		ApiResponse<Integer> apiResponse = new ApiResponse<>();
+        ApiResponse<Integer> apiResponse = new ApiResponse<>();
         apiResponse.setResult(courseService.getMyNewestCourseId());
-		return apiResponse;
+        return apiResponse;
     }
 
     @GetMapping("/my-courses")
     ApiResponse<List<Course>> getallCoursesById() {
         ApiResponse<List<Course>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(courseService.getallCoursesById());
-		return apiResponse;
+        return apiResponse;
     }
-	}
+
+    // new method
+    @PostMapping("/confirm-register")
+    ApiResponse<String> confirmRegisterCourse(@RequestBody ConfirmRegistrationRequest request) {
+        String msg = "You have successfully registered for the course!";
+        String email = request.getEmail(); // method nay nha
+
+        emailService.confirmRegisterCourse(msg, email);
+
+        String greeting = "Hello! ";
+        String responseMessage = greeting + "Confirmation email has been sent to " + email;
+
+        return ApiResponse.<String>builder().result(responseMessage).build();
+    }
+
+    // request dki moi
+    @Getter
+    @Setter
+    static class ConfirmRegistrationRequest {
+        private String email;
+    }
+}
