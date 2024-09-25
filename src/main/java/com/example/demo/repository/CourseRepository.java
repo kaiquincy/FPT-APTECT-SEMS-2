@@ -13,4 +13,6 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     Optional<List<Integer>> findLatestCourseIdByTeacherId(Integer teacherId);
 
     List<Course> findAllByTeacherId(Integer id);
+
+    List<Course> findAllByState(String state);
 }

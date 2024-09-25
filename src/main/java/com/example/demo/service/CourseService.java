@@ -1,12 +1,20 @@
 package com.example.demo.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.Course;
 import com.example.demo.entity.Lecture;
@@ -27,19 +35,33 @@ public class CourseService {
     @Autowired
     private LectureRepository lectureRepository;
 
+    @Value("${upload_course.path}")
+    private String uploadPath;
+
     public Course getCourseById(Integer id) {
         return courseRepository.findById(id)
             .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
     }
 
     public List<Course> getAllCourse() {
-        return courseRepository.findAll();
+        return courseRepository.findAllByState("APPROVED");
     }
 
-    public Course createCourse(Course course){
-        course.setTeacherId(userService.getMyinfo().getId());
-        course.setState("PENDING");
-        return courseRepository.save(course);
+    public Course createCourse(String title, String description, Double price, MultipartFile image){
+        // Lưu file ảnh trên server
+        String imageName = saveImage(image);
+        
+        
+        
+        Course newCourse = new Course();
+        newCourse.setTitle(title);
+        newCourse.setDescription(description);
+        newCourse.setPrice(price);
+        newCourse.setImg(imageName);
+
+        newCourse.setTeacherId(userService.getMyinfo().getId());
+        newCourse.setState("PENDING");
+        return courseRepository.save(newCourse);
     }
 
     public String updateCourse(Integer id, Course course){
@@ -124,4 +146,30 @@ public class CourseService {
     public Integer getMyNewestCourseId(){
         return courseRepository.findLatestCourseIdByTeacherId(userService.getMyinfo().getId()).get().get(0);
     }
+
+
+
+    // Hàm lưu file ảnh và trả về tên file
+    private String saveImage(MultipartFile image) {
+        if (image != null && !image.isEmpty()) {
+            String originalFilename = StringUtils.cleanPath(image.getOriginalFilename());
+            String extension = StringUtils.getFilenameExtension(originalFilename);
+            String newFilename = UUID.randomUUID().toString() + "." + extension; // Đặt tên file ngẫu nhiên
+
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
+            try {
+                Files.copy(image.getInputStream(), Paths.get(uploadPath + newFilename));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return newFilename;
+        }
+        return null;
+    }
+    
 }
