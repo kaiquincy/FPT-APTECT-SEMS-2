@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.UserCreationRequest;
 import com.example.demo.entity.Users;
-import com.example.demo.service.EmailService;
 import com.example.demo.service.ForgotPasswordService;
 import com.example.demo.service.UserService;
 
@@ -35,9 +34,6 @@ public class UserController {
 
 	@Autowired
 	private ForgotPasswordService forgotPasswordService; // Khai báo ForgotPasswordService
-
-	@Autowired
-	private EmailService emailService; // Khai báo EmailService
 
 	@GetMapping("/{id}")
 	ApiResponse<Users> getUserById(@PathVariable Long id) {

@@ -34,7 +34,7 @@
             "/api/auth/token",
             "/api/auth/introspect",
             "/api/user/forgot-password",
-             "/api/user/reset"
+            "/api/user/reset-password"
         };
 
         private final String[] PUBLIC_GET_ENDPOINTS = {
