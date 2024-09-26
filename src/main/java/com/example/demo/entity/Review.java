@@ -30,7 +30,7 @@ public class Review {
     Users student;
 
     @Column(name = "rating")
-    Short rating;
+    Double rating;
 
     @Column(name = "comment")
     String comment;
