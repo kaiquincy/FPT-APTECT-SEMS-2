@@ -171,5 +171,18 @@ public class CourseService {
         }
         return null;
     }
+
+
+    public void acceptCourse(Integer id){
+        Course course = getCourseById(id);
+        course.setState("APPROVED");
+        courseRepository.save(course);
+    }
+
+    public void rejectCourse(Integer id){
+        Course course = getCourseById(id);
+        course.setState("REJECTED");
+        courseRepository.save(course);
+    }
     
 }
