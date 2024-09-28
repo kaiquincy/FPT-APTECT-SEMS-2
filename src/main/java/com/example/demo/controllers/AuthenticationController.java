@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor //auto wire beans
-@CrossOrigin(origins = "http://localhost:3000") //Cho phep front end su dung API
+@CrossOrigin(origins = "*") //Cho phep front end su dung API
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationController {
     private AuthenticationService authenticationService;

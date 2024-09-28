@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping(value = "/api/course")
-@CrossOrigin(origins = "http://localhost:3000") // Позволяет фронтенду использовать API
+@CrossOrigin(origins = "*") // Позволяет фронтенду использовать API
 @Slf4j
 public class CourseController {
 
