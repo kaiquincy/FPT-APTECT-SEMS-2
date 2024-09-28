@@ -35,14 +35,16 @@ public class SecurityConfig {
             "/api/auth/introspect",
             "/api/user/forgot-password",
             "/api/user/reset-password",        
-            "/api/course/confirm-register" // Добавляем эндпоинт
+            "/api/course/confirm-register", // Добавляем эндпоинт
+            "/order/confirm-webhook"
     };
 
     private final String[] PUBLIC_GET_ENDPOINTS = {
             "/api/course/**",
             "/video",
             "/swagger-ui/**",
-            "/uploads/**"
+            "/uploads/**",
+            "/order/confirm-webhook"
         };
 
     // Эндпоинты, требующие аутентификации

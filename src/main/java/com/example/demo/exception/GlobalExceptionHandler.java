@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
     
     @SuppressWarnings("rawtypes")
     @ExceptionHandler(value = Exception.class) //Unhandled exceptions
-    ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception){
+    ResponseEntity<ApiResponse> handlingRuntimeException(Exception exception){
         ApiResponse apiResponse = new ApiResponse<>();
         apiResponse.setCode(9999);
         apiResponse.setMessage(exception.getMessage());
