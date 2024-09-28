@@ -16,7 +16,7 @@ public class Comment {
     @Column(length = 500)
     private String msg; // Содержимое комментария
 
-    // Геттеры и сеттеры
+
     public Integer getId() {
         return id;
     }
