@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dto.ApiResponse;
 import com.example.demo.entity.Course;
@@ -42,9 +43,13 @@ public class CourseController {
     }
 
     @PostMapping
-    ApiResponse<Course> createCourse(@Valid @RequestBody Course entity) {
+    ApiResponse<Course> createCourse(@Valid @RequestParam("title") String title,
+                                            @RequestParam("description") String description,
+                                            @RequestParam("price") Double price,
+                                            @RequestParam("img") MultipartFile image)
+    {
         ApiResponse<Course> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(courseService.createCourse(entity));
+        apiResponse.setResult(courseService.createCourse(title, description, price, image));
         return apiResponse;
     }
 
@@ -78,13 +83,12 @@ public class CourseController {
     // new method
     @PostMapping("/confirm-register")
     ApiResponse<String> confirmRegisterCourse(@RequestBody ConfirmRegistrationRequest request) {
-        String msg = "You have successfully registered for the course!";
+        String msg = "You have successfully registered for the course! Click this link to navigate to your course : " + request.linkCourse;
         String email = request.getEmail(); // method nay nha
 
         emailService.confirmRegisterCourse(msg, email);
 
-        String greeting = "Hello! ";
-        String responseMessage = greeting + "Confirmation email has been sent to " + email;
+        String responseMessage ="Hello! Confirmation email has been sent to " + email;
 
         return ApiResponse.<String>builder().result(responseMessage).build();
     }
@@ -94,5 +98,8 @@ public class CourseController {
     @Setter
     static class ConfirmRegistrationRequest {
         private String email;
+        private String linkCourse;
     }
+
+    
 }

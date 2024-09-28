@@ -29,7 +29,6 @@ public class VideoUploadController {
             @RequestHeader("Authorization") String authToken,
             @RequestParam("file") MultipartFile file) {
         
-        // Kiểm tra token nếu cần
         if (authToken == null || authToken.isEmpty()) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
@@ -52,8 +51,15 @@ public class VideoUploadController {
             // Tạo tên file mới với thời gian hiện tại
             String newFileName = "video_" + formattedTime + extension;
 
+            String parentPath = new File(System.getProperty("user.dir")).getParent(); // Lấy thư mục cha của dự án
+            File uploadDir = new File(parentPath,"pending/videos");
+
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs(); // Tạo tất cả các thư mục con nếu cần
+            }
+
             // Lưu file vào thư mục trên server
-            File videoFile = new File("C:\\Users\\Admin\\Desktop\\FPT APTECH\\SEMESTER 2\\EPROJECT - SringBoot\\Pending Videos\\" + newFileName);
+            File videoFile = new File(uploadDir,newFileName);
             file.transferTo(videoFile);
 
             // return new ResponseEntity<>("Successfully uploaded - " + newFileName, HttpStatus.OK);

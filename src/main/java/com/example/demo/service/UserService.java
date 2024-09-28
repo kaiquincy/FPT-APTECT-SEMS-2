@@ -8,9 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.UserCreationRequest;
 import com.example.demo.entity.Users;
 import com.example.demo.enums.Role;
