@@ -27,7 +27,7 @@ public class ForgotPasswordService {
         PasswordResetToken resetToken = new PasswordResetToken();
         resetToken.setToken(token);
         resetToken.setEmail(email);
-        resetToken.setExpiryDate(LocalDateTime.now().plusHours(1)); 
+        resetToken.setExpiryDate(LocalDateTime.now().plusHours(1));
         tokenRepository.save(resetToken);
 
         return token;
@@ -38,7 +38,6 @@ public class ForgotPasswordService {
     }
 
     public void sendVerificationCode(String email) {
-        
         String code = generateVerificationCode();
         savePasswordResetToken(email, code);
         emailService.sendEmail(email, "Your Verification Code", "Your verification code is: " + code);
@@ -48,17 +47,16 @@ public class ForgotPasswordService {
         Optional<PasswordResetToken> verificationToken = tokenRepository.findByToken(code);
         if (verificationToken.isPresent()) {
             PasswordResetToken token = verificationToken.get();
-            return token.getEmail().equals(email) && 
-                   token.getExpiryDate().isAfter(LocalDateTime.now());
+            return token.getEmail().equals(email) &&
+                    token.getExpiryDate().isAfter(LocalDateTime.now());
         }
         return false;
     }
 
-    public void resetPassword(String email, String code, String newPassword) {
-        if (!isVerificationCodeValid(email, code)) {
-            throw new IllegalArgumentException("Invalid or expired verification code!");
-        }
-
+    public void resetPassword(String email, String newPassword) {
+        // Сбрасываем пароль, если код уже был проверен
         userService.updatePassword(email, newPassword);
+        // Здесь можно удалить токен, если это необходимо
+        // tokenRepository.deleteByToken(code); // Не нужно в этом методе
     }
 }

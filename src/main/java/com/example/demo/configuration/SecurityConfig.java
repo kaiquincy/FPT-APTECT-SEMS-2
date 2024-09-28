@@ -34,7 +34,8 @@ public class SecurityConfig {
             "/api/auth/token",
             "/api/auth/introspect",
             "/api/user/forgot-password",
-            "/api/user/reset-password",        
+            "/api/user/reset-password",
+            "/api/user/verify-code",  // Добавлен эндпоинт verify-code
             "/api/course/confirm-register", // Добавляем эндпоинт
             "/order/confirm-webhook"
     };
@@ -45,7 +46,7 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/uploads/**",
             "/order/confirm-webhook"
-        };
+    };
 
     // Эндпоинты, требующие аутентификации
     private final String[] USER_ENDPOINTS = {
@@ -66,6 +67,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
                                 .requestMatchers(USER_ENDPOINTS).hasAnyAuthority("SCOPE_STUDENT", "SCOPE_TEACHER", "SCOPE_ADMIN")
                                 .requestMatchers("/api/course/**", "/api/lecture/**", "/api/s3bucketstorage/**").hasAnyAuthority("SCOPE_TEACHER", "SCOPE_ADMIN")
+                                .requestMatchers("/api/lecture/comment/**").hasAnyAuthority("SCOPE_STUDENT", "SCOPE_TEACHER", "SCOPE_ADMIN") // Эндпоинты комментариев
                                 .requestMatchers("/api/admin/**", "/api/user/**").hasAuthority("SCOPE_ADMIN")
                                 .requestMatchers("/api/courses/{course-id}/").hasAuthority("SCOPE_STUDENT")
                                 .requestMatchers(HttpMethod.POST, "/api/notifications").hasAuthority("SCOPE_ADMIN")
