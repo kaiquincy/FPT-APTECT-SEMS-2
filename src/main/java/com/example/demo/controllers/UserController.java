@@ -87,16 +87,29 @@ public class UserController {
 
 		return ApiResponse.<String>builder().result("Verification code has been sent to your email").build();
 	}
+	@PostMapping("/verify-code")
+	public ApiResponse<String> verifyCode(@RequestBody Map<String, String> requestBody) {
+		String email = requestBody.get("email");
+		String verificationCode = requestBody.get("code");
+
+		// Проверка кода
+		boolean isValid = forgotPasswordService.isVerificationCodeValid(email, verificationCode);
+		if (!isValid) {
+			return ApiResponse.<String>builder().result("Invalid or expired verification code").build();
+		}
+
+		return ApiResponse.<String>builder().result("Verification code is valid. You may now set a new password.").build();
+	}
+
 	@PostMapping("/reset-password")
-    public ApiResponse<String> resetPassword(@RequestBody Map<String, String> requestBody) {
-        String email = requestBody.get("email");
-        String verificationCode = requestBody.get("code");
-        String newPassword = requestBody.get("newPassword");
+	public ApiResponse<String> resetPassword(@RequestBody Map<String, String> requestBody) {
+		String email = requestBody.get("email");
+		String newPassword = requestBody.get("newPassword");
 
-        forgotPasswordService.resetPassword(email, verificationCode, newPassword);
-        return ApiResponse.<String>builder().result("Password has been reset successfully").build();
-    }
-
+		// Сброс пароля
+		forgotPasswordService.resetPassword(email, newPassword);
+		return ApiResponse.<String>builder().result("Password has been reset successfully").build();
+	}
 
 
 }

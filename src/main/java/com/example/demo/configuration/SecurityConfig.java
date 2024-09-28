@@ -34,7 +34,8 @@ public class SecurityConfig {
             "/api/auth/token",
             "/api/auth/introspect",
             "/api/user/forgot-password",
-            "/api/user/reset-password",        
+            "/api/user/reset-password",
+            "/api/user/verify-code",  // Добавлен эндпоинт verify-code
             "/api/course/confirm-register", // Добавляем эндпоинт
             "/order/confirm-webhook"
     };
@@ -45,7 +46,7 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/uploads/**",
             "/order/confirm-webhook"
-        };
+    };
 
     // Эндпоинты, требующие аутентификации
     private final String[] USER_ENDPOINTS = {
