@@ -71,6 +71,7 @@ public class UserController {
 
 	@PostMapping("/{id}/assign-role")
 	ApiResponse<String> postMethodName(@PathVariable Long id, @RequestBody String role) {
+		System.out.println(role);
 		return ApiResponse.<String>builder().result(userService.assignRole(id, role)).build();
 	}
 
@@ -106,7 +107,7 @@ public class UserController {
 		String email = requestBody.get("email");
 		String newPassword = requestBody.get("newPassword");
 
-		// Сброс пароля
+		// Сброс паря
 		forgotPasswordService.resetPassword(email, newPassword);
 		return ApiResponse.<String>builder().result("Password has been reset successfully").build();
 	}

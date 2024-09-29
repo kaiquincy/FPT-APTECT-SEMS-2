@@ -16,19 +16,23 @@ import com.example.demo.repository.CourseRepository;
 import com.example.demo.service.CourseService;
 import com.example.demo.service.UserService;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
 @RequestMapping(value = "/api/admin")
-@CrossOrigin(origins = "http://localhost:3000") //Cho phep front end su dung API
+@CrossOrigin(origins = "*") //Cho phep front end su dung API
 @Slf4j
 public class AdminController {
+	
 	@Autowired
 	private UserService userService;
+	
 	@Autowired
 	private CourseRepository courseRepository;
+	
 	@Autowired
 	private CourseService courseService;
 
@@ -56,12 +60,19 @@ public class AdminController {
 		return apiResponse;
 	}
 
-	@PostMapping("/rejectcourse/{courseId}")
-	ApiResponse<String> rejectCourse(@PathVariable Integer courseId) {
+	@PostMapping(value = "/rejectcourse/{courseId}")
+	ApiResponse<String> postMethodName(@PathVariable Integer courseId, @RequestBody String role) {
 		ApiResponse<String> apiResponse = new ApiResponse<>();
-		courseService.rejectCourse(courseId);
-		apiResponse.setResult("Accepted the course successfully!");
+		// courseService.rejectCourse(courseId, request.getReason());
+		apiResponse.setResult("Reject the course successfully!");
+		System.out.println("a"+role);
 		return apiResponse;
+	}
+
+	@PostMapping("/{id}/assign-role")
+	ApiResponse<String> postMethodName(@PathVariable Long id, @RequestBody String role) {
+		System.out.println(role);
+		return ApiResponse.<String>builder().result("asd").build();
 	}
 	
 }
