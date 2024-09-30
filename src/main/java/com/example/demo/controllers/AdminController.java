@@ -10,15 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.ApiResponse;
+import com.example.demo.dto.request.RejectCourseRequest;
 import com.example.demo.entity.Course;
 import com.example.demo.entity.Users;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.service.CourseService;
 import com.example.demo.service.UserService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -61,18 +62,11 @@ public class AdminController {
 	}
 
 	@PostMapping(value = "/rejectcourse/{courseId}")
-	ApiResponse<String> postMethodName(@PathVariable Integer courseId, @RequestBody String role) {
+	ApiResponse<String> postMethodName(@PathVariable Integer courseId, @RequestBody RejectCourseRequest request) {
 		ApiResponse<String> apiResponse = new ApiResponse<>();
-		// courseService.rejectCourse(courseId, request.getReason());
+		courseService.rejectCourse(courseId, request.getReason());
 		apiResponse.setResult("Reject the course successfully!");
-		System.out.println("a"+role);
 		return apiResponse;
-	}
-
-	@PostMapping("/{id}/assign-role")
-	ApiResponse<String> postMethodName(@PathVariable Long id, @RequestBody String role) {
-		System.out.println(role);
-		return ApiResponse.<String>builder().result("asd").build();
 	}
 	
 }
