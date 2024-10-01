@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +36,9 @@ public class UserController {
 	@Autowired
 	private ForgotPasswordService forgotPasswordService; // Khai báo ForgotPasswordService
 
+	@PreAuthorize("hasAuthority('SCOPE_ADMIN') or @userRepository.findById(#id)?.get()?.username == authentication.name")
 	@GetMapping("/{id}")
-	ApiResponse<Users> getUserById(@PathVariable Long id) {
+	ApiResponse<Users> getUserById(@PathVariable Integer id) {
 		ApiResponse<Users> apiResponse = new ApiResponse<>();
 		apiResponse.setResult(userService.getUserById(id));
 		return apiResponse;
@@ -57,20 +59,20 @@ public class UserController {
 	}
 
 	@PutMapping("/{id}")
-	ApiResponse<Users> updateUserById(@PathVariable Long id, @Valid @RequestBody Users user) {
+	ApiResponse<Users> updateUserById(@PathVariable Integer id, @Valid @RequestBody Users user) {
 		ApiResponse<Users> apiResponse = new ApiResponse<>();
 		apiResponse.setResult(userService.updateUser(id, user));
 		return apiResponse;
 	}
 
 	@DeleteMapping("/{id}")
-	ApiResponse<String> deleteUserById(@PathVariable Long id) {
+	ApiResponse<String> deleteUserById(@PathVariable Integer id) {
 		userService.deleteUser(id);
 		return ApiResponse.<String>builder().result("User has been deleted").build();
 	}
 
 	@PostMapping("/{id}/assign-role")
-	ApiResponse<String> postMethodName(@PathVariable Long id, @RequestBody String role) {
+	ApiResponse<String> postMethodName(@PathVariable Integer id, @RequestBody String role) {
 		System.out.println(role);
 		return ApiResponse.<String>builder().result(userService.assignRole(id, role)).build();
 	}

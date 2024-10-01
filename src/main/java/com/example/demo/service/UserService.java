@@ -50,8 +50,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN') or @userRepository.findById(#id)?.get()?.username == authentication.name")
-    public Users getUserById(Long id) {
+    public Users getUserById(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
@@ -90,7 +89,7 @@ public class UserService {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or @userRepository.findById(#id)?.get()?.username == authentication.name")
-    public Users updateUser(Long id, Users userUpdateRequest) {
+    public Users updateUser(Integer id, Users userUpdateRequest) {
         Users user = getUserById(id); // old user
 
         user.setEmail(userUpdateRequest.getEmail());
@@ -102,7 +101,7 @@ public class UserService {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or @userRepository.findById(#id)?.get()?.username == authentication.name")
-    public void deleteUser(Long id) {
+    public void deleteUser(Integer id) {
         if (!userRepository.existsById(id)) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
@@ -110,7 +109,7 @@ public class UserService {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or @userRepository.findById(#id)?.get()?.username == authentication.name")
-    public String assignRole(Long id, String role) {
+    public String assignRole(Integer id, String role) {
         List<String> roles = List.of("TEACHER", "STUDENT");
         if (!roles.contains(role)) {
             throw new AppException(ErrorCode.ROLE_NOT_EXISTED);

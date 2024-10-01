@@ -33,6 +33,8 @@ public class Transaction {
     @Column(name = "transaction_date", nullable = false)
     private LocalDateTime transactionDate;
 
+    private Integer productId;
+
     @PrePersist
     protected void onCreate() {
         transactionDate = LocalDateTime.now();

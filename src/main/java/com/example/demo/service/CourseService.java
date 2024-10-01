@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
@@ -184,6 +185,34 @@ public class CourseService {
         course.setReject_reason(reason);
         course.setState("REJECTED");
         courseRepository.save(course);
+    }
+
+    public String acceptLecture(Integer id){
+        Lecture lecture = getLectureById(id);
+        lecture.setState("APPROVED");
+
+        //Chuyển video từ file pending(private) sang uploads/video(public)
+        String videoName = lecture.getVideo();
+
+        File pendingDir = new File("pending/videos");
+        File videoFilePath = new File(pendingDir,videoName); // kết hợp đường dẫn
+
+        File uploadDir = new File("uploads/video");
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs(); // Tạo tất cả các thư mục con nếu cần
+        }
+        File newVideoFilePath = new File(uploadDir, videoName);
+
+        try {
+            // Di chuyển tệp video sang thư mục uploads/videos
+            Files.move(videoFilePath.toPath(), newVideoFilePath.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.err.println("Failed to move the video file: " + e.getMessage());
+            return "Failed to move the video file: " + e.getMessage();
+        }
+
+        lectureRepository.save(lecture);
+        return "Success";
     }
 
     public List<Lecture> getAllLectureByCourseId(Integer id){

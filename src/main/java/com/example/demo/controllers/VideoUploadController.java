@@ -51,8 +51,8 @@ public class VideoUploadController {
             // Tạo tên file mới với thời gian hiện tại
             String newFileName = "video_" + formattedTime + extension;
 
-            String parentPath = new File(System.getProperty("user.dir")).getParent(); // Lấy thư mục cha của dự án
-            File uploadDir = new File(parentPath,"pending/videos");
+            String projectRootPath = System.getProperty("user.dir");
+            File uploadDir = new File(projectRootPath,"pending/videos");
 
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs(); // Tạo tất cả các thư mục con nếu cần

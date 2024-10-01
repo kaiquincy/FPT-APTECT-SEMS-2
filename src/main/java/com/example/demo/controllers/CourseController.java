@@ -10,6 +10,7 @@ import com.example.demo.dto.ApiResponse;
 import com.example.demo.entity.Course;
 import com.example.demo.service.CourseService;
 import com.example.demo.service.EmailService;
+import com.example.demo.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.Getter;
@@ -30,6 +31,9 @@ public class CourseController {
 
     @Autowired
     EmailService emailService; // Внедряем EmailService
+
+    @Autowired
+    UserService userService;
 
     @GetMapping
     ApiResponse<List<Course>> getAllCourse() {
@@ -83,6 +87,13 @@ public class CourseController {
         return apiResponse;
     }
     
+    @GetMapping("/get-teacher-name/{courseId}")
+    ApiResponse<String> getTeacherName(@PathVariable Integer courseId) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        Integer teacherId = courseService.getCourseById(courseId).getTeacherId();
+        apiResponse.setResult(userService.getUserById(teacherId).getUsername());
+        return apiResponse;
+    }
     
     // new method
     @PostMapping("/confirm-register")

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.request.CreatePaymentLinkRequestBody;
 import com.example.demo.entity.Transaction;
 import com.example.demo.enums.TransactionType;
+import com.example.demo.service.EnrollmentService;
 import com.example.demo.service.TransactionService;
 import com.example.demo.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -43,6 +44,8 @@ public class OrderController {
     TransactionService transactionService;
     @Autowired
     UserService userService;
+    @Autowired
+    EnrollmentService enrollmentService;
 
 
 
@@ -52,7 +55,7 @@ public class OrderController {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode response = objectMapper.createObjectNode();
         try {
-            final String productName = RequestBody.getProductName();
+            final String productId = RequestBody.getProductId();
             final String description = RequestBody.getDescription();
             final String returnUrl = RequestBody.getReturnUrl();
             final String cancelUrl = RequestBody.getCancelUrl();
@@ -61,7 +64,7 @@ public class OrderController {
             String currentTimeString = String.valueOf(String.valueOf(new Date().getTime()));
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
 
-            ItemData item = ItemData.builder().name(productName).price(price).quantity(1).build();
+            ItemData item = ItemData.builder().name(productId).price(price).quantity(1).build();
 
             PaymentData paymentData = PaymentData.builder().orderCode(orderCode).description(description).amount(price)
                     .item(item).returnUrl(returnUrl).cancelUrl(cancelUrl).build();
@@ -76,7 +79,8 @@ public class OrderController {
             Transaction transaction = new Transaction();
             transaction.setId(data.getPaymentLinkId());
             transaction.setAmount((double)(data.getAmount()));
-            transaction.setTransactionType(TransactionType.PENDING);
+            transaction.setTransactionType(TransactionType.PURCHASE);
+            transaction.setProductId(Integer.parseInt(productId));
             transactionService.createTransaction(transaction);
 
             return response;
@@ -153,6 +157,9 @@ public class OrderController {
             
             transactionService.changeStatus(currentTransaction, "SUCCESS");
 
+            //add enrollment
+            System.out.println(currentTransaction.getProductId());
+            enrollmentService.addEnrollment(currentTransaction.getProductId(), currentTransaction.getUserId());
 
             return response;
         } catch (Exception e) {

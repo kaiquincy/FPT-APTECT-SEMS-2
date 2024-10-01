@@ -88,7 +88,7 @@ public class AuthenticationService {
                 .issuer("localhost:8080") //token nay dc issuer tu ai ? tu domain cua service
                 .issueTime(new Date())
                 .expirationTime(new Date(
-                    Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
+                    Instant.now().plus(3, ChronoUnit.MINUTES).toEpochMilli()
                 )) // token het han sau 1 tieng
                 .claim("scope", users.getRole())
                 .build();

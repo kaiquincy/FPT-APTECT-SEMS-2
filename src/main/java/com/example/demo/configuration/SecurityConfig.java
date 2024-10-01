@@ -45,14 +45,23 @@ public class SecurityConfig {
             "/video",
             "/swagger-ui/**",
             "/uploads/**",
-            "/order/confirm-webhook"
+            "/order/confirm-webhook",
+            "/api/course/get-teacher-name/*"
     };
 
     // Эндпоинты, требующие аутентификации
     private final String[] USER_ENDPOINTS = {
             "/api/user/**",
             "/api/transaction/**",
-            "/api/upload-video"
+            "/api/upload-video",
+            "/api/courses/{course-id}/"
+    };
+
+    private final String[] ADMIN_ENDPOINTS = {
+        "/api/admin/**",
+        "/api/user/**",
+        "/api/notifications/**",
+        "/pending/**"
     };
 
     // Значение signerKey из application.properties
@@ -68,9 +77,7 @@ public class SecurityConfig {
                                 .requestMatchers(USER_ENDPOINTS).hasAnyAuthority("SCOPE_STUDENT", "SCOPE_TEACHER", "SCOPE_ADMIN")
                                 .requestMatchers("/api/course/**", "/api/lecture/**", "/api/s3bucketstorage/**").hasAnyAuthority("SCOPE_TEACHER", "SCOPE_ADMIN")
                                 .requestMatchers("/api/lecture/comment/**").hasAnyAuthority("SCOPE_STUDENT", "SCOPE_TEACHER", "SCOPE_ADMIN") // Эндпоинты комментариев
-                                .requestMatchers("/api/user/**").hasAuthority("SCOPE_ADMIN")
-                                .requestMatchers("/api/courses/{course-id}/").hasAuthority("SCOPE_STUDENT")
-                                .requestMatchers(HttpMethod.POST, "/api/notifications").hasAuthority("SCOPE_ADMIN")
+                                .requestMatchers(ADMIN_ENDPOINTS).hasAuthority("SCOPE_ADMIN")
                                 .anyRequest().authenticated()) // Все остальные запросы требуют аутентификации
 
                 .exceptionHandling(exceptionHandling ->

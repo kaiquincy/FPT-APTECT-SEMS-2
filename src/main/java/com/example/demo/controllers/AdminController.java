@@ -68,5 +68,12 @@ public class AdminController {
 		apiResponse.setResult("Reject the course successfully!");
 		return apiResponse;
 	}
+
+	@PostMapping("/approvallecture/{lectureId}")
+	ApiResponse<String> approveLecture(@PathVariable Integer lectureId) {
+		ApiResponse<String> apiResponse = new ApiResponse<>();
+		apiResponse.setResult(courseService.acceptLecture(lectureId));
+		return apiResponse;
+	}
 	
 }

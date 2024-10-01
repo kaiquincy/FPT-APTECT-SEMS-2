@@ -33,10 +33,10 @@ public class EnrollmentService {
     ModelMapper modelMapper;
 
     @Transactional
-    public EnrollmentDTO addEnrollment(Integer courseId){
+    public EnrollmentDTO addEnrollment(Integer courseId, Integer userId){
         Course course = findCourseById(courseId);
 
-        if(enrollmentRepository.existsByStudentIdAndCourseId(userService.getMyinfo().getId(), courseId)){
+        if(enrollmentRepository.existsByStudentIdAndCourseId(userId, courseId)){
             throw new AppException(ErrorCode.ENROLLMENT_EXISTED);
         }
 
@@ -52,7 +52,7 @@ public class EnrollmentService {
 
         Enrollment enrollment = new Enrollment();
         enrollment.setCourseId(courseId);
-        enrollment.setStudentId(userService.getMyinfo().getId());
+        enrollment.setStudentId(userId);
         enrollment.setProgress(0);
         enrollment.setEnrollmentDate(LocalDateTime.now());
 
