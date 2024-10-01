@@ -15,6 +15,7 @@ public class PasswordResetToken {
     private String email;
 
     private LocalDateTime expiryDate;
+    private String verificationCode;
 
     // Getters and Setters
     public Long getId() {
@@ -48,6 +49,13 @@ public class PasswordResetToken {
     public void setExpiryDate(LocalDateTime expiryDate) {
         this.expiryDate = expiryDate;
     }
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
 
     // Constructors
 
@@ -61,6 +69,6 @@ public class PasswordResetToken {
     }
 
     // toString
-    
+
 
 }
