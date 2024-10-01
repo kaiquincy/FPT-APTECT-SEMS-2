@@ -58,9 +58,8 @@ public class LectureController {
         return ApiResponse.<Comment>builder().result(savedComment).build();
     }
 
-	@PostMapping("/{id}/assign-role")
-	ApiResponse<String> postMethodName(@PathVariable Long id, @RequestBody String role) {
-		System.out.println(role);
-		return ApiResponse.<String>builder().result(userService.assignRole(id, role)).build();
-	}
+    @GetMapping("/getall-lecture-by-courseid/{id}")
+    public ApiResponse<List<Lecture>> getAllLectureByCourseId(@PathVariable Integer id) {
+        return ApiResponse.<List<Lecture>>builder().result(courseService.getAllLectureByCourseId(id)).build();
+    }
 }

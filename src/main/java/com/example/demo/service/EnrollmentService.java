@@ -44,11 +44,11 @@ public class EnrollmentService {
         //     throw new AppException(ErrorCode.INSUFFICIENT_FUNDS);
         // }
 
-        Transaction transaction = new Transaction();
-        transaction.setAmount(course.getPrice());
-        transaction.setTransactionType(TransactionType.PURCHASE);
-        transactionService.createTransaction(transaction);
-
+        // Transaction transaction = new Transaction();
+        // transaction.setAmount(course.getPrice());
+        // transaction.setTransactionType(TransactionType.PURCHASE);
+        // transactionService.createTransaction(transaction);
+        // transaction has beed added in the payment controller, not here
 
         Enrollment enrollment = new Enrollment();
         enrollment.setCourseId(courseId);

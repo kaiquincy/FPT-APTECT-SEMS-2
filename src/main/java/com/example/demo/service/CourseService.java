@@ -185,5 +185,9 @@ public class CourseService {
         course.setState("REJECTED");
         courseRepository.save(course);
     }
+
+    public List<Lecture> getAllLectureByCourseId(Integer id){
+        return lectureRepository.findAllByCourseId(id);
+    }
     
 }
