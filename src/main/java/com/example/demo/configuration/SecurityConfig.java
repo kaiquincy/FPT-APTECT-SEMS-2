@@ -68,7 +68,7 @@ public class SecurityConfig {
                                 .requestMatchers(USER_ENDPOINTS).hasAnyAuthority("SCOPE_STUDENT", "SCOPE_TEACHER", "SCOPE_ADMIN")
                                 .requestMatchers("/api/course/**", "/api/lecture/**", "/api/s3bucketstorage/**").hasAnyAuthority("SCOPE_TEACHER", "SCOPE_ADMIN")
                                 .requestMatchers("/api/lecture/comment/**").hasAnyAuthority("SCOPE_STUDENT", "SCOPE_TEACHER", "SCOPE_ADMIN") // Эндпоинты комментариев
-                                .requestMatchers("/api/admin/**", "/api/user/**").hasAuthority("SCOPE_ADMIN")
+                                .requestMatchers("/api/user/**").hasAuthority("SCOPE_ADMIN")
                                 .requestMatchers("/api/courses/{course-id}/").hasAuthority("SCOPE_STUDENT")
                                 .requestMatchers(HttpMethod.POST, "/api/notifications").hasAuthority("SCOPE_ADMIN")
                                 .anyRequest().authenticated()) // Все остальные запросы требуют аутентификации

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.ApiResponse;
+import com.example.demo.dto.request.RejectCourseRequest;
 import com.example.demo.entity.Course;
 import com.example.demo.entity.Users;
 import com.example.demo.repository.CourseRepository;
@@ -18,17 +19,21 @@ import com.example.demo.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
 @RequestMapping(value = "/api/admin")
-@CrossOrigin(origins = "http://localhost:3000") //Cho phep front end su dung API
+@CrossOrigin(origins = "*") //Cho phep front end su dung API
 @Slf4j
 public class AdminController {
+	
 	@Autowired
 	private UserService userService;
+	
 	@Autowired
 	private CourseRepository courseRepository;
+	
 	@Autowired
 	private CourseService courseService;
 
@@ -56,11 +61,11 @@ public class AdminController {
 		return apiResponse;
 	}
 
-	@PostMapping("/rejectcourse/{courseId}")
-	ApiResponse<String> rejectCourse(@PathVariable Integer courseId) {
+	@PostMapping(value = "/rejectcourse/{courseId}")
+	ApiResponse<String> postMethodName(@PathVariable Integer courseId, @RequestBody RejectCourseRequest request) {
 		ApiResponse<String> apiResponse = new ApiResponse<>();
-		courseService.rejectCourse(courseId);
-		apiResponse.setResult("Accepted the course successfully!");
+		courseService.rejectCourse(courseId, request.getReason());
+		apiResponse.setResult("Reject the course successfully!");
 		return apiResponse;
 	}
 	

@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,7 +37,7 @@ public class TransactionService {
             default:
                 break;
         }
-
+        transaction.setStatus("PENDING");
         transaction.setUserId(userService.getMyinfo().getId());
         return transactionRepository.save(transaction);
     }
@@ -76,9 +77,19 @@ public class TransactionService {
     public List<Transaction> getTransactionsByUserId(Integer userId){
         return transactionRepository.findAllByUserId(userId);
     }
-    
+
+    // @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public Optional<Transaction> getTransactionById(String transactionId){
+        return transactionRepository.findById(transactionId);
+    }
+
+    public Integer changeStatus(Transaction transaction, String status){
+        transaction.setStatus(status);
+        transactionRepository.save(transaction);
+        return 1;
+    }
+
     public List<Transaction> getMyTransactions(){
         return transactionRepository.findAllByUserId(userService.getMyinfo().getId());
     }
-
 }

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping(value = "/api/user")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @Slf4j
 public class UserController {
 
@@ -71,6 +71,7 @@ public class UserController {
 
 	@PostMapping("/{id}/assign-role")
 	ApiResponse<String> postMethodName(@PathVariable Long id, @RequestBody String role) {
+		System.out.println(role);
 		return ApiResponse.<String>builder().result(userService.assignRole(id, role)).build();
 	}
 
@@ -82,18 +83,32 @@ public class UserController {
 		if (!userService.emailExists(email)) {
 			throw new RuntimeException("Email does not exist!");
 		}
-
-		forgotPasswordService.createPasswordResetToken(email);
+		
+		forgotPasswordService.sendVerificationCode(email);
 
 		return ApiResponse.<String>builder().result("Verification code has been sent to your email").build();
 	}
+	@PostMapping("/verify-code")
+	public ApiResponse<String> verifyCode(@RequestBody Map<String, String> requestBody) {
+		String email = requestBody.get("email");
+		String verificationCode = requestBody.get("code");
+
+		// Проверка кода
+		boolean isValid = forgotPasswordService.isVerificationCodeValid(email, verificationCode);
+		if (!isValid) {
+			return ApiResponse.<String>builder().result("Invalid or expired verification code").build();
+		}
+
+		return ApiResponse.<String>builder().result("Verification code is valid. You may now set a new password.").build();
+	}
+
 	@PostMapping("/reset-password")
 	public ApiResponse<String> resetPassword(@RequestBody Map<String, String> requestBody) {
 		String email = requestBody.get("email");
-		String verificationCode = requestBody.get("code");
 		String newPassword = requestBody.get("newPassword");
 
-		forgotPasswordService.resetPassword(email, verificationCode, newPassword);
+		// Сброс паря
+		forgotPasswordService.resetPassword(email, newPassword);
 		return ApiResponse.<String>builder().result("Password has been reset successfully").build();
 	}
 

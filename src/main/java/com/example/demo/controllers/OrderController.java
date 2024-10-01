@@ -1,8 +1,8 @@
 package com.example.demo.controllers;
 
 import java.util.Date;
-import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.CreatePaymentLinkRequestBody;
+import com.example.demo.entity.Transaction;
+import com.example.demo.enums.TransactionType;
+import com.example.demo.service.TransactionService;
+import com.example.demo.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -33,14 +36,16 @@ import vn.payos.type.WebhookData;
 @CrossOrigin(
     origins = "*"
 )
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class OrderController {
-    private final PayOS payOS;
+    @Autowired
+    PayOS payOS;
+    @Autowired
+    TransactionService transactionService;
+    @Autowired
+    UserService userService;
 
-    public OrderController(PayOS payOS) {
-        super();
-        this.payOS = payOS;
-    }
+
+
 
     @PostMapping(path = "/create")
     public ObjectNode createPaymentLink(@RequestBody CreatePaymentLinkRequestBody RequestBody) {
@@ -66,6 +71,14 @@ public class OrderController {
             response.put("error", 0);
             response.put("message", "success");
             response.set("data", objectMapper.valueToTree(data));
+
+            // Create transaction with status "PENDING"
+            Transaction transaction = new Transaction();
+            transaction.setId(data.getPaymentLinkId());
+            transaction.setAmount((double)(data.getAmount()));
+            transaction.setTransactionType(TransactionType.PENDING);
+            transactionService.createTransaction(transaction);
+
             return response;
 
         } catch (Exception e) {
@@ -74,7 +87,6 @@ public class OrderController {
             response.put("message", "fail");
             response.set("data", null);
             return response;
-
         }
     }
 
@@ -119,6 +131,7 @@ public class OrderController {
         }
     }
 
+    //When user paid the money
     @PostMapping(path = "/confirm-webhook")
     public ObjectNode payosTransferHandler(@RequestBody ObjectNode body)
         throws JsonProcessingException, IllegalArgumentException {
@@ -134,7 +147,13 @@ public class OrderController {
             response.set("data", null);
 
             WebhookData data = payOS.verifyPaymentWebhookData(webhookBody);
-            System.out.println(body);
+            
+            //set  transaction's status to "PURCHASE"
+            Transaction currentTransaction = transactionService.getTransactionById(data.getPaymentLinkId()).get();
+            
+            transactionService.changeStatus(currentTransaction, "SUCCESS");
+
+
             return response;
         } catch (Exception e) {
             e.printStackTrace();

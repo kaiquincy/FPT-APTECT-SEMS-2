@@ -15,8 +15,8 @@ import com.example.demo.enums.TransactionType;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
     @Column(name = "user_id", nullable = false)
     private Integer userId;
@@ -27,6 +27,8 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type", nullable = false)
     private TransactionType transactionType;
+
+    private String status;
 
     @Column(name = "transaction_date", nullable = false)
     private LocalDateTime transactionDate;

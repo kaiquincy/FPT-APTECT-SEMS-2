@@ -1,6 +1,7 @@
 package com.example.demo.exception;
 
 
+import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -59,5 +60,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: " + ex.getMessage());
     }
 
-
+    @ExceptionHandler(ClientAbortException.class)
+    public ResponseEntity<String> handleClientAbortException(ClientAbortException ex) {
+        // Bạn có thể ghi log ở mức độ INFO hoặc bỏ qua ngoại lệ này
+        // System.out.println("ClientAbortException: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

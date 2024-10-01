@@ -5,5 +5,6 @@ public enum TransactionType {
     WITHDRAW,
     PURCHASE,
     TRANSFER,
-    REFUND
+    REFUND,
+    PENDING
 }

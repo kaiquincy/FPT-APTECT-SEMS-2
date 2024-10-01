@@ -11,10 +11,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
 @Table(name = "courses")
+@Getter
+@Setter
 public class Course {
 
     @Id
@@ -44,83 +48,13 @@ public class Course {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    private String reject_reason;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
 
 
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Double getPrice() {
-        return this.price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Integer getTeacherId() {
-        return this.teacherId;
-    }
-
-    public void setTeacherId(Integer teacherId) {
-        this.teacherId = teacherId;
-    }
-
-    public double getRate() {
-        return this.rate;
-    }
-
-    public void setRate(double rate) {
-        this.rate = rate;
-    }
-
-    public String getState() {
-        return this.state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getImg() {
-        return this.img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return this.createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 
 }

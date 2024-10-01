@@ -40,7 +40,7 @@ public class VideoUploadController {
         try {
             // Lấy thời gian hiện tại và định dạng nó
             LocalDateTime currentTime = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
             String formattedTime = currentTime.format(formatter);
 
             // Lấy phần mở rộng của file

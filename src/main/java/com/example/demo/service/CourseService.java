@@ -179,10 +179,15 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public void rejectCourse(Integer id){
+    public void rejectCourse(Integer id, String reason){
         Course course = getCourseById(id);
+        course.setReject_reason(reason);
         course.setState("REJECTED");
         courseRepository.save(course);
+    }
+
+    public List<Lecture> getAllLectureByCourseId(Integer id){
+        return lectureRepository.findAllByCourseId(id);
     }
     
 }
