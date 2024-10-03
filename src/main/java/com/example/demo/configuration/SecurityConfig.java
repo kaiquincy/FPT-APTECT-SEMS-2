@@ -45,6 +45,7 @@ public class SecurityConfig {
             "/video",
             "/swagger-ui/**",
             "/uploads/**",
+            "/pending/**",
             "/order/confirm-webhook",
             "/api/course/get-teacher-name/*"
     };
@@ -61,7 +62,6 @@ public class SecurityConfig {
         "/api/admin/**",
         "/api/user/**",
         "/api/notifications/**",
-        "/pending/**"
     };
 
     // Значение signerKey из application.properties

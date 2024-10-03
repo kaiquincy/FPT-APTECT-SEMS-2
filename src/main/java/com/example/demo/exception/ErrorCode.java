@@ -27,6 +27,7 @@ public enum ErrorCode {
     FULLNAME_BLANK(1121,"Fullname cannot be blank", HttpStatus.BAD_REQUEST),
     PASSWORD_INVALID(1131,"Password must be at least 8 characters", HttpStatus.BAD_REQUEST),
     FILE_MISSING(1122,"Please select a file to upload!", HttpStatus.BAD_REQUEST),
+    TRANSACTION_NULL(1123,"User have no transactions", HttpStatus.BAD_REQUEST),
 
     PERMISSION_COURSE_DENIED(1201, "You don't have enough permission to this course", HttpStatus.FORBIDDEN),
 

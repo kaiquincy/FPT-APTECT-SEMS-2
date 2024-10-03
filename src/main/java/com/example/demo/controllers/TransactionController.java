@@ -44,6 +44,11 @@ public class TransactionController {
     @GetMapping
     ApiResponse<List<Transaction>> getMyTransactions(){
         return ApiResponse.<List<Transaction>>builder().result(transactionService.getMyTransactions()).build();
-    };  
+    };
+
+    @GetMapping("/my-lastest-transaction")
+    ApiResponse<Transaction> getMyLastestTransactions(){
+        return ApiResponse.<Transaction>builder().result(transactionService.getMyLastestTransactions()).build();
+    };
     
 }

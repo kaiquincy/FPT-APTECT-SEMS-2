@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.controllers.SettingController.ApiResponse;
 import com.example.demo.entity.Transaction;
 import com.example.demo.entity.Users;
 import com.example.demo.exception.AppException;
@@ -91,5 +92,9 @@ public class TransactionService {
 
     public List<Transaction> getMyTransactions(){
         return transactionRepository.findAllByUserId(userService.getMyinfo().getId());
+    }
+
+    public Transaction getMyLastestTransactions(){
+        return transactionRepository.findTopByUserIdOrderByTransactionDateDesc(userService.getMyinfo().getId()).get();
     }
 }
