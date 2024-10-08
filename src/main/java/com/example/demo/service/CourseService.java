@@ -187,6 +187,13 @@ public class CourseService {
         courseRepository.save(course);
     }
 
+    public void rejectLecture(Integer id, String reason){
+        Lecture lecture = getLectureById(id);
+        lecture.setReject_reason(reason);
+        lecture.setState("REJECTED");
+        lectureRepository.save(lecture);
+    }
+
     public String acceptLecture(Integer id){
         Lecture lecture = getLectureById(id);
         lecture.setState("APPROVED");
@@ -194,7 +201,7 @@ public class CourseService {
         //Chuyển video từ file pending(private) sang uploads/video(public)
         String videoName = lecture.getVideo();
 
-        File pendingDir = new File("pending/videos");
+        File pendingDir = new File("pending/video");
         File videoFilePath = new File(pendingDir,videoName); // kết hợp đường dẫn
 
         File uploadDir = new File("uploads/video");

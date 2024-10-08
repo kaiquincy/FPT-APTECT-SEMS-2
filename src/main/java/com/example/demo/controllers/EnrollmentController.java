@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping(value = "/api/enrollment")
-@CrossOrigin(origins = "http://localhost:3000") //Cho phep front end su dung API
+@CrossOrigin(origins = "*") //Cho phep front end su dung API
 @Slf4j
 public class EnrollmentController {
     @Autowired

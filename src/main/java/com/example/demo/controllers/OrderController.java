@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.request.CreatePaymentLinkRequestBody;
 import com.example.demo.entity.Transaction;
 import com.example.demo.enums.TransactionType;
+import com.example.demo.service.EmailService;
 import com.example.demo.service.EnrollmentService;
 import com.example.demo.service.TransactionService;
 import com.example.demo.service.UserService;
@@ -46,6 +47,8 @@ public class OrderController {
     UserService userService;
     @Autowired
     EnrollmentService enrollmentService;
+    @Autowired
+    EmailService emailService;
 
 
 
@@ -160,6 +163,12 @@ public class OrderController {
             //add enrollment
             System.out.println(currentTransaction.getProductId());
             enrollmentService.addEnrollment(currentTransaction.getProductId(), currentTransaction.getUserId());
+
+            //mail
+            String msg = "You have successfully registered for the course! Click this link to navigate to your course : " ;
+            String email = "kawdwk@gmail.com"; // method nay nha
+    
+            emailService.confirmRegisterCourse(msg, email);
 
             return response;
         } catch (Exception e) {
